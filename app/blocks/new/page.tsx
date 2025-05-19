@@ -4,7 +4,7 @@ import { ArrowLeft } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { BlockForm } from "@/components/Feather/blocks/block-form"
+import { BlockForm } from "@/components/Feather/Blocks/block-form"
 
 
 export const metadata: Metadata = {

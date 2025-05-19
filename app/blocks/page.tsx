@@ -1,4 +1,4 @@
-import { BlocksTable } from "@/components/Feather/blocks/blocks-table"
+import { BlocksTable } from "@/components/Feather/Blocks/blocks-table"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
