@@ -34,12 +34,7 @@ const navigationItems = [
     title: "Blocks",
     href: "/blocks",
     icon: Blocks,
-  },
-  {
-    title: "Settings",
-    href: "/settings",
-    icon: Settings,
-  },
+  }
 ]
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {

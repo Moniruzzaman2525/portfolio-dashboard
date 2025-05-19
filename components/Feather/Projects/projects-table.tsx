@@ -26,7 +26,6 @@ import {
 } from "@/components/ui/dialog"
 import { Badge } from "@/components/ui/badge"
 
-// Sample data - would come from your API in a real app
 const projects = [
     {
         id: "1",
@@ -197,14 +196,15 @@ export function ProjectsTable() {
                                                     project.status === "Active"
                                                         ? "default"
                                                         : project.status === "Completed"
-                                                            ? "success"
+                                                            ? "secondary"
                                                             : project.status === "In Progress"
-                                                                ? "warning"
-                                                                : "secondary"
+                                                                ? "outline"
+                                                                : "destructive"
                                                 }
                                             >
                                                 {project.status}
                                             </Badge>
+
                                         </TableCell>
                                         <TableCell className="hidden md:table-cell">{project.owner}</TableCell>
                                         <TableCell className="hidden md:table-cell">{project.createdAt}</TableCell>
