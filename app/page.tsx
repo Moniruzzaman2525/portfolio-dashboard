@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import Dashboard from "@/components/Feather/Home/Dashboard"
 import DashboardHistory from "@/components/Feather/Home/DashboardHistory"
 import DashboardOverview from "@/components/Feather/Home/DashboardOverview"
+import DashboardTable from "@/components/Feather/Home/DashboardTable"
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -14,6 +15,7 @@ export default function DashboardPage() {
       <Dashboard />
       <DashboardHistory />
       <DashboardOverview />
+      <DashboardTable />
     </div>
   )
 }
