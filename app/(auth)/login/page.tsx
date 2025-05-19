@@ -1,32 +1,24 @@
-import type { Metadata } from "next"
-import Link from "next/link"
-
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { LoginForm } from "@/components/Feather/Login/login-form"
-
-export const metadata: Metadata = {
-    title: "Login",
-    description: "Login to your account",
-}
+import Link from "next/link"
 
 export default function LoginPage() {
     return (
-        <Card className="w-full">
-            <CardHeader className="space-y-1">
-                <CardTitle className="text-2xl">Login</CardTitle>
-                <CardDescription>Enter your email and password to login to your account</CardDescription>
-            </CardHeader>
-            <CardContent className="grid gap-4">
-                <LoginForm />
-            </CardContent>
-            <CardFooter className="flex flex-col items-center gap-2">
-                <div className="text-sm text-muted-foreground">
-                    Don&apos;t have an account?{" "}
-                    <Link href="/signup" className="text-primary underline-offset-4 hover:underline">
-                        Sign up
-                    </Link>
+        <div className="flex min-h-screen flex-col items-center justify-center p-4 sm:p-6">
+            <div className="w-full max-w-md space-y-6">
+                <div className="space-y-2 text-center">
+                    <h1 className="text-3xl font-bold">Welcome back</h1>
+                    <p className="text-gray-500 dark:text-gray-400">Enter your credentials to sign in to your account</p>
                 </div>
-            </CardFooter>
-        </Card>
+                <div className="space-y-4">
+                    <LoginForm />
+                    <div className="text-center text-sm">
+                        Don&apos;t have an account?{" "}
+                        <Link href="/signup" className="font-medium text-primary hover:underline">
+                            Sign up
+                        </Link>
+                    </div>
+                </div>
+            </div>
+        </div>
     )
 }
