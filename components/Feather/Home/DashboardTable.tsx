@@ -1,6 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import React from 'react';
-import { ProjectsTable } from './projects-table';
+import { ProjectsTable } from '../Projects/projects-table';
 import { BlocksTable } from './blocks-table';
 
 const DashboardTable = () => {
