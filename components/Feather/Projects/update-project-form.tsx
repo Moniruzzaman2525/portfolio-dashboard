@@ -17,7 +17,7 @@ import { useForm } from "react-hook-form"
 import * as z from "zod"
 import { RichTextEditor } from "@/components/ui/Shared/rich-text-editor"
 import { useUser } from "@/context/UserContext"
-import { createProject } from "@/services/Projects"
+import { createProject, updateProject } from "@/services/Projects"
 import { toast } from "sonner"
 
 const formSchema = z.object({
@@ -44,38 +44,26 @@ export function UpdateProjectForm({ project }: any) {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            name: "",
-            description: "",
-            status: "",
-            startDate: new Date(),
-            endDate: undefined,
+            name: project.name,
+            description: project.description,
+            status: project.status,
+            startDate: new Date(project.startDate),
+            endDate: project.endDate ? new Date(project.endDate) : undefined,
         },
     })
 
 
-    useEffect(() => {
-        if (project) {
-            form.reset({
-                name: project.name || "",
-                description: project.description || "",
-                status: project.status || "",
-                startDate: project.startDate ? new Date(project.startDate) : new Date(),
-                endDate: project.endDate ? new Date(project.endDate) : undefined,
-            })
-        }
-    }, [project, form])
-
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         setIsSubmitting(true)
         try {
-            const formattedData = {
+            const data = {
                 ...values,
                 startDate: format(values.startDate, "yyyy-MM-dd"),
                 endDate: values.endDate ? format(values.endDate, "yyyy-MM-dd") : undefined,
                 owner: user?.userId,
             }
 
-            const res = await createProject(formattedData)
+            const res = await updateProject(project._id, data)
             if (res.success) {
                 toast.success(res?.message)
                 router.push(`/projects`)
@@ -222,7 +210,7 @@ export function UpdateProjectForm({ project }: any) {
                         Cancel
                     </Button>
                     <Button type="submit" disabled={isSubmitting}>
-                        {isSubmitting ? "Creating..." : "Create Project"}
+                        {isSubmitting ? "updating..." : "Update Project"}
                     </Button>
                 </div>
             </form>

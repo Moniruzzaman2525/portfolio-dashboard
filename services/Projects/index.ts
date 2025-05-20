@@ -41,6 +41,23 @@ export const createProject = async (data: any) => {
     }
 }
 
+export const updateProject = async (id: any, data: any) => {
+    try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/projects/${id}`, {
+            method: "PATCH",
+            headers: {
+                Authorization: `Bearer ${(await cookies()).get("accessToken")!.value}`,
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        });
+        const result = await res.json();
+        revalidateTag("projects")
+        return result;
+    } catch (error: any) {
+        return Error(error);
+    }
+}
 
 export const deleteProjects = async (id: any) => {
     try {
