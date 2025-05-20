@@ -1,16 +1,16 @@
-import { ProjectsTable } from "@/components/Feather/Projects/projects-table"
+
 import { SkillsTable } from "@/components/Feather/Skills/SkillsTable"
-import { getProjects } from "@/services/Projects"
+import { getSkills } from "@/services/Skills"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-    title: "Projects",
-    description: "Manage your projects",
+    title: "Skills",
+    description: "Manage your Skills",
 }
 
-export default async function ProjectsPage() {
+export default async function SkillsPage() {
 
-    const projects = await getProjects()
+    const skills = await getSkills()
 
 
     return (
@@ -19,7 +19,7 @@ export default async function ProjectsPage() {
                 <h1 className="text-3xl font-bold tracking-tight">Skills</h1>
                 <p className="text-muted-foreground">View and manage all your skills.</p>
             </div>
-            <SkillsTable skills={projects.data} />
+            <SkillsTable skills={skills.data} />
         </div>
     )
 }

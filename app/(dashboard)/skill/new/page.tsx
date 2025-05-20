@@ -8,8 +8,8 @@ import { AddSkillForm } from "@/components/Feather/Skills/AddSkillForm"
 
 
 export const metadata: Metadata = {
-    title: "Create Project",
-    description: "Create a new project",
+    title: "Create Skills",
+    description: "Create a new Skills",
 }
 
 export default function CreateProjectPage() {
