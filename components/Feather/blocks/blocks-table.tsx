@@ -26,51 +26,9 @@ import {
 } from "@/components/ui/dialog"
 import { Badge } from "@/components/ui/badge"
 
-// Sample data - would come from your API in a real app
-const blocks = [
-    {
-        id: "1",
-        name: "Hero Section",
-        type: "UI Component",
-        project: "Marketing Website",
-        createdAt: "2023-07-15",
-        updatedAt: "2023-08-02",
-    },
-    {
-        id: "2",
-        name: "Product Card",
-        type: "UI Component",
-        project: "E-commerce Platform",
-        createdAt: "2023-05-20",
-        updatedAt: "2023-06-10",
-    },
-    {
-        id: "3",
-        name: "Authentication Flow",
-        type: "Feature",
-        project: "Mobile App",
-        createdAt: "2023-03-12",
-        updatedAt: "2023-04-05",
-    },
-    {
-        id: "4",
-        name: "Dashboard Widget",
-        type: "UI Component",
-        project: "Internal Dashboard",
-        createdAt: "2023-09-05",
-        updatedAt: "2023-09-10",
-    },
-    {
-        id: "5",
-        name: "API Integration",
-        type: "Feature",
-        project: "CRM System",
-        createdAt: "2023-06-28",
-        updatedAt: "2023-07-15",
-    },
-]
 
-export function BlocksTable() {
+
+export function BlocksTable({ blocks }: { blocks: any[] }) {
     const [searchTerm, setSearchTerm] = useState("")
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
     const [blockToDelete, setBlockToDelete] = useState<string | null>(null)
@@ -208,13 +166,13 @@ export function BlocksTable() {
                                                 <DropdownMenuContent align="end">
                                                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
                                                     <DropdownMenuItem asChild>
-                                                        <Link href={`/blocks/${block.id}`}>
+                                                        <Link href={`/blocks/${block._id}`}>
                                                             <Eye className="mr-2 h-4 w-4" />
                                                             View
                                                         </Link>
                                                     </DropdownMenuItem>
                                                     <DropdownMenuItem asChild>
-                                                        <Link href={`/blocks/${block.id}/edit`}>
+                                                        <Link href={`/blocks/${block._id}/edit`}>
                                                             <Edit className="mr-2 h-4 w-4" />
                                                             Edit
                                                         </Link>
@@ -222,7 +180,7 @@ export function BlocksTable() {
                                                     <DropdownMenuSeparator />
                                                     <DropdownMenuItem
                                                         className="text-destructive focus:text-destructive"
-                                                        onClick={() => handleDeleteClick(block.id)}
+                                                        onClick={() => handleDeleteClick(block._id)}
                                                     >
                                                         <Trash2 className="mr-2 h-4 w-4" />
                                                         Delete

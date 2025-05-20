@@ -9,9 +9,11 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
+import { set, useForm } from "react-hook-form"
 import * as z from "zod"
 import { RichTextEditor } from "@/components/Dashboard/rich-text-editor"
+import { createBlock } from "@/services/Blocks"
+import { toast } from "sonner"
 
 const formSchema = z.object({
     name: z.string().min(2, {
@@ -54,15 +56,13 @@ export function BlockForm() {
     })
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
 
-
-        console.log(values)
-
-        // const res = await createProject(formattedData)
-        // if (res.success) {
-        //     toast.success(res?.message);
-        //     set
-        //     router.push(`/projects`)
-        // }
+        const res = await createBlock(values)
+        console.log(res)
+        if (res.success) {
+            toast.success(res?.message);
+            setIsSubmitting(false)
+            router.push(`/blocks`)
+        }
     }
     return (
         <Form {...form}>

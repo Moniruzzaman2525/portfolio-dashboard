@@ -10,7 +10,6 @@ export const metadata: Metadata = {
 export default async function ProjectsPage() {
 
     const projects = await getProjects()
-    console.log(projects)
 
 
     return (
