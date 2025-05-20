@@ -45,7 +45,7 @@ export function ProjectsTable({ projects }: { projects: any[] }) {
         }
     }
 
-    const filteredProjects = projects.filter(
+    const filteredProjects = projects?.filter(
         (project) =>
             project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
             project.owner.toLowerCase().includes(searchTerm.toLowerCase()) ||

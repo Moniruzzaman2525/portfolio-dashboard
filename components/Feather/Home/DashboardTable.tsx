@@ -1,9 +1,14 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import React from 'react';
 import { ProjectsTable } from '../Projects/projects-table';
-import { BlocksTable } from './blocks-table';
 
-const DashboardTable = () => {
+import { getBlocks } from '@/services/Blocks';
+import { getProjects } from '@/services/Projects';
+import { BlocksTable } from '../Blocks/blocks-table';
+
+const DashboardTable = async () => {
+    const projects = await getProjects()
+    const blocks = await getBlocks()
     return (
         <div>
             <Tabs defaultValue="projects" className="w-full">
@@ -12,10 +17,10 @@ const DashboardTable = () => {
                     <TabsTrigger value="blocks">Blocks</TabsTrigger>
                 </TabsList>
                 <TabsContent value="projects" className="mt-4">
-                    <ProjectsTable />
+                    <ProjectsTable projects={projects.data} />
                 </TabsContent>
                 <TabsContent value="blocks" className="mt-4">
-                    <BlocksTable />
+                    <BlocksTable blocks={blocks.data} />
                 </TabsContent>
             </Tabs>
         </div>

@@ -47,7 +47,7 @@ export function BlocksTable({ blocks }: { blocks: any[] }) {
         }
     }
 
-    const filteredBlocks = blocks.filter(
+    const filteredBlocks = blocks?.filter(
         (block) =>
             block.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
             block.type.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -151,7 +151,7 @@ export function BlocksTable({ blocks }: { blocks: any[] }) {
                                 </TableRow>
                             ) : (
                                 sortedBlocks.map((block) => (
-                                    <TableRow key={block.id}>
+                                    <TableRow key={block._id}>
                                         <TableCell className="font-medium">{block.name}</TableCell>
                                         <TableCell>
                                             <Badge variant={block.type === "UI Component" ? "outline" : "secondary"}>{block.type}</Badge>
