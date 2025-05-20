@@ -66,31 +66,19 @@ const blockTypes: { [key: string]: string } = {
 export function UpdateBlockForm({ block }: any) {
     const router = useRouter()
     const [isSubmitting, setIsSubmitting] = useState(false)
-
+    const projectId =
+        projects.find((p) => p.id === block.project || p.name === block.project)?.id || ""
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            name: "",
-            description: "",
-            type: "",
-            project: "",
-            code: "",
+            name: block.name,
+            description: block.description,
+            type: block.type,
+            project: projectId,
+            code: block.code,
         },
     })
 
-    useEffect(() => {
-        if (block) {
-            const projectId =
-                projects.find((p) => p.id === block.project || p.name === block.project)?.id || ""
-            form.reset({
-                name: block.name || "",
-                description: block.description || "",
-                type: block.type || "",
-                project: projectId,
-                code: block.code || "",
-            })
-        }
-    }, [block, form])
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         setIsSubmitting(true)
@@ -162,7 +150,7 @@ export function UpdateBlockForm({ block }: any) {
                             <FormLabel>Description</FormLabel>
                             <FormControl>
                                 <RichTextEditor
-                                    key={field.value} 
+                                    key={field.value}
                                     value={field.value}
                                     onChange={field.onChange}
                                     placeholder="Enter block description"
