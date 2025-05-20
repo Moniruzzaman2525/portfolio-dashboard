@@ -2,13 +2,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import React from 'react';
 import { ProjectsTable } from '../Projects/projects-table';
 
-import { getBlocks } from '@/services/Blocks';
-import { getProjects } from '@/services/Projects';
 import { BlocksTable } from '../Blocks/blocks-table';
 
-const DashboardTable = async () => {
-    const projects = await getProjects()
-    const blocks = await getBlocks()
+const DashboardTable = async ({ projects, blocks }: { projects: any, blocks: any }) => {
+
     return (
         <div>
             <Tabs defaultValue="projects" className="w-full">

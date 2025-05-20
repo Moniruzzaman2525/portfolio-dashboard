@@ -1,7 +1,14 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import React from 'react';
 
-const DashboardHistory = () => {
+const DashboardHistory = ({ projects, blocks }: { projects: any, blocks: any }) => {
+    const activeProjects = projects?.filter(
+        (p: any) => p.status === 'in-progress' || !p.endDate
+    )?.length || 0;
+
+    const completedProjects = projects?.filter(
+        (p: any) => p.status === 'completed' || !!p.endDate
+    )?.length || 0;
     return (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             <Card>
@@ -21,7 +28,7 @@ const DashboardHistory = () => {
                     </svg>
                 </CardHeader>
                 <CardContent>
-                    <div className="text-2xl font-bold">24</div>
+                    <div className="text-2xl font-bold">{projects?.length}</div>
                     <p className="text-xs text-muted-foreground">+10% from last month</p>
                 </CardContent>
             </Card>
@@ -43,7 +50,7 @@ const DashboardHistory = () => {
                     </svg>
                 </CardHeader>
                 <CardContent>
-                    <div className="text-2xl font-bold">78</div>
+                    <div className="text-2xl font-bold">{blocks?.length}</div>
                     <p className="text-xs text-muted-foreground">+18% from last month</p>
                 </CardContent>
             </Card>
@@ -64,7 +71,7 @@ const DashboardHistory = () => {
                     </svg>
                 </CardHeader>
                 <CardContent>
-                    <div className="text-2xl font-bold">16</div>
+                    <div className="text-2xl font-bold">{activeProjects}</div>
                     <p className="text-xs text-muted-foreground">+5% from last month</p>
                 </CardContent>
             </Card>
@@ -87,7 +94,7 @@ const DashboardHistory = () => {
                     </svg>
                 </CardHeader>
                 <CardContent>
-                    <div className="text-2xl font-bold">8</div>
+                    <div className="text-2xl font-bold">{completedProjects}</div>
                     <p className="text-xs text-muted-foreground">+12% from last month</p>
                 </CardContent>
             </Card>
