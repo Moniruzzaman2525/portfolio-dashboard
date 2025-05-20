@@ -34,7 +34,7 @@ const formSchema = z.object({
 })
 
 type SkillType = {
-    id: string
+    _id: string
     name: string
     image: string
 }
@@ -46,17 +46,11 @@ export function UpdateSkillForm({ skill }: { skill: SkillType }) {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            name: "",
+            name: skill.name,
             image: "",
         },
     })
 
-    useEffect(() => {
-        if (skill) {
-            form.setValue("name", skill.name)
-            form.setValue("image", skill.image)
-        }
-    }, [skill, form])
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         setIsSubmitting(true)
@@ -66,6 +60,7 @@ export function UpdateSkillForm({ skill }: { skill: SkillType }) {
         // Only upload if a new file is selected
         if (values.image instanceof File) {
             const uploadedUrl = await handleImageUpload(values.image)
+
             if (!uploadedUrl) {
                 toast.error("Image upload failed.")
                 setIsSubmitting(false)
@@ -80,7 +75,8 @@ export function UpdateSkillForm({ skill }: { skill: SkillType }) {
         }
 
         try {
-            const res = await updateSkills(skill.id, payload)
+            const res = await updateSkills(skill._id, payload)
+
             if (res.success) {
                 toast.success("Skill updated successfully!")
                 router.push("/skill")
