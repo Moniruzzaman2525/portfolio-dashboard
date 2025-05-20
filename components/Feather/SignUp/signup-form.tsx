@@ -6,12 +6,12 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Eye, EyeOff } from "lucide-react"
 import { registerUser } from "@/services/AuthService"
-interface LoginFormProps {
-    query: { [key: string]: string | string[] | undefined };
-}
-export function SignupForm({ query }: LoginFormProps) {
+import { useUser } from "@/context/UserContext";
+
+export function SignupForm() {
     const router = useRouter()
-    const [isLoading, setIsLoading] = useState(false)
+    const { setIsLoading } = useUser();
+    const [isLoadingButton, setIsLoadingButton] = useState(false)
     const [name, setName] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
@@ -19,7 +19,6 @@ export function SignupForm({ query }: LoginFormProps) {
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
     const [error, setError] = useState("")
-    const redirect = Array.isArray(query?.redirectPath) ? query?.redirectPath[0] : query?.redirectPath;
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -30,7 +29,7 @@ export function SignupForm({ query }: LoginFormProps) {
             setError("Passwords do not match")
             return
         }
-        setIsLoading(true)
+        setIsLoadingButton(true)
 
         try {
             const data = {
@@ -41,14 +40,11 @@ export function SignupForm({ query }: LoginFormProps) {
 
             const res = await registerUser(data)
             if (res.success) {
-                setIsLoading(true);
+                setIsLoading(true)
+                setIsLoadingButton(false);
                 toast.success(res?.message);
                 router.push('/')
-                if (redirect) {
-                    router.push(redirect);
-                } else {
-                    router.push('/');
-                }
+
             } else {
                 toast.error(res?.message || 'Login failed. Please try again.');
             }
@@ -56,7 +52,7 @@ export function SignupForm({ query }: LoginFormProps) {
         } catch (err) {
             setError("An error occurred. Please try again.")
         } finally {
-            setIsLoading(false)
+            setIsLoadingButton(false)
         }
     }
 
@@ -173,9 +169,9 @@ export function SignupForm({ query }: LoginFormProps) {
             <button
                 type="submit"
                 className="inline-flex h-10 w-full items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
-                disabled={isLoading}
+                disabled={isLoadingButton}
             >
-                {isLoading ? "Creating account..." : "Create account"}
+                {isLoadingButton ? "Creating account..." : "Create account"}
             </button>
         </form>
     )
