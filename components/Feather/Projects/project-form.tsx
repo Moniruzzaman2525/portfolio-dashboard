@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { CalendarIcon } from "lucide-react"
-import { format } from "date-fns"
+import { format, set } from "date-fns"
 
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
@@ -18,6 +18,7 @@ import * as z from "zod"
 import { RichTextEditor } from "@/components/ui/Shared/rich-text-editor"
 import { useUser } from "@/context/UserContext"
 import { createProject } from "@/services/Projects"
+import { toast } from "sonner"
 
 const formSchema = z.object({
     name: z.string().min(2, {
@@ -59,6 +60,8 @@ export function ProjectForm() {
 
         const res = await createProject(formattedData)
         if (res.success) {
+            toast.success(res?.message);
+            set
             router.push(`/projects`)
         }
     }
@@ -185,7 +188,7 @@ export function ProjectForm() {
                     <Button variant="outline" type="button" onClick={() => router.push("/")}>
                         Cancel
                     </Button>
-                    <Button type="submit">
+                    <Button type="submit" disabled={isSubmitting}>
                         {isSubmitting ? "Creating..." : "Create Project"}
                     </Button>
                 </div>

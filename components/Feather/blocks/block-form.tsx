@@ -52,20 +52,18 @@ export function BlockForm() {
             code: "",
         },
     })
+    const onSubmit = async (values: z.infer<typeof formSchema>) => {
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
-        setIsSubmitting(true)
 
-        // In a real app, you would submit to your API here
         console.log(values)
 
-        // Simulate API call
-        setTimeout(() => {
-            setIsSubmitting(false)
-            router.push("/")
-        }, 1000)
+        // const res = await createProject(formattedData)
+        // if (res.success) {
+        //     toast.success(res?.message);
+        //     set
+        //     router.push(`/projects`)
+        // }
     }
-
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">

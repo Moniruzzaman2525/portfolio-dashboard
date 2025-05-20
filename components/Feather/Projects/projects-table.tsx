@@ -26,8 +26,6 @@ import {
 } from "@/components/ui/dialog"
 import { Badge } from "@/components/ui/badge"
 
-
-
 export function ProjectsTable({ projects }: { projects: any[] }) {
     const [searchTerm, setSearchTerm] = useState("")
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
