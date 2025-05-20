@@ -2,8 +2,9 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { CalendarIcon } from "lucide-react"
-import { format, set } from "date-fns"
+import { CalendarIcon, UploadCloud } from "lucide-react"
+import { format } from "date-fns"
+import * as z from "zod"
 
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
@@ -14,7 +15,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { cn } from "@/lib/utils"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import * as z from "zod"
 import { RichTextEditor } from "@/components/ui/Shared/rich-text-editor"
 import { useUser } from "@/context/UserContext"
 import { createProject } from "@/services/Projects"
@@ -34,12 +34,15 @@ const formSchema = z.object({
         required_error: "Start date is required.",
     }),
     endDate: z.date().optional(),
+    image: z.any().optional(),
+    liveLink: z.string().url().optional(),
 })
 
 export function ProjectForm() {
     const router = useRouter()
-    const { user } = useUser();
+    const { user } = useUser()
     const [isSubmitting, setIsSubmitting] = useState(false)
+    const [imagePreview, setImagePreview] = useState<string | null>(null)
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -47,26 +50,54 @@ export function ProjectForm() {
             name: "",
             description: "",
             status: "",
+            liveLink: "",
         },
     })
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
+        setIsSubmitting(true)
+
+        let imageUrl = null
+
+        if (values.image && values.image.length > 0) {
+            const file = values.image[0]
+
+            // Example image upload to Cloudinary or your backend
+            const formData = new FormData()
+            formData.append("file", file)
+            formData.append("upload_preset", "your_preset") // Replace with your actual preset
+
+            try {
+                const res = await fetch("https://api.cloudinary.com/v1_1/your_cloud_name/image/upload", {
+                    method: "POST",
+                    body: formData,
+                })
+
+                const data = await res.json()
+                imageUrl = data.secure_url
+            } catch (error) {
+                toast.error("Image upload failed.")
+                setIsSubmitting(false)
+                return
+            }
+        }
+
         const formattedData = {
             ...values,
             startDate: format(values.startDate, "yyyy-MM-dd"),
             endDate: values.endDate ? format(values.endDate, "yyyy-MM-dd") : null,
-            owner: user?.userId
+            image: imageUrl,
+            owner: user?.userId,
         }
 
         const res = await createProject(formattedData)
         if (res.success) {
-            toast.success(res?.message);
-            set
+            toast.success(res?.message)
             router.push(`/projects`)
         }
+
+        setIsSubmitting(false)
     }
-
-
 
     return (
         <Form {...form}>
@@ -85,6 +116,7 @@ export function ProjectForm() {
                             </FormItem>
                         )}
                     />
+
                     <FormField
                         control={form.control}
                         name="status"
@@ -128,6 +160,57 @@ export function ProjectForm() {
                     )}
                 />
 
+                <FormField
+                    control={form.control}
+                    name="liveLink"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Live Link</FormLabel>
+                            <FormControl>
+                                <Input placeholder="https://example.com" {...field} />
+                            </FormControl>
+                            <FormDescription>
+                                Paste a deployed project link if available.
+                            </FormDescription>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+
+                <FormField
+                    control={form.control}
+                    name="image"
+                    render={({ field: { onChange, ...fieldProps } }) => (
+                        <FormItem>
+                            <FormLabel>Upload Project Image</FormLabel>
+                            <FormControl>
+                                <Input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(e) => {
+                                        const file = e.target.files?.[0]
+                                        if (file) {
+                                            onChange(e.target.files)
+                                            const reader = new FileReader()
+                                            reader.onloadend = () => setImagePreview(reader.result as string)
+                                            reader.readAsDataURL(file)
+                                        }
+                                    }}
+                                    {...fieldProps}
+                                />
+                            </FormControl>
+                            {imagePreview && (
+                                <img
+                                    src={imagePreview}
+                                    alt="Preview"
+                                    className="mt-2 h-32 w-32 rounded-md object-cover border"
+                                />
+                            )}
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+
                 <div className="grid gap-4 md:grid-cols-2">
                     <FormField
                         control={form.control}
@@ -139,7 +222,7 @@ export function ProjectForm() {
                                     <PopoverTrigger asChild>
                                         <FormControl>
                                             <Button
-                                                variant={"outline"}
+                                                variant="outline"
                                                 className={cn("w-full pl-3 text-left font-normal", !field.value && "text-muted-foreground")}
                                             >
                                                 {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
@@ -155,6 +238,7 @@ export function ProjectForm() {
                             </FormItem>
                         )}
                     />
+
                     <FormField
                         control={form.control}
                         name="endDate"
@@ -165,7 +249,7 @@ export function ProjectForm() {
                                     <PopoverTrigger asChild>
                                         <FormControl>
                                             <Button
-                                                variant={"outline"}
+                                                variant="outline"
                                                 className={cn("w-full pl-3 text-left font-normal", !field.value && "text-muted-foreground")}
                                             >
                                                 {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}

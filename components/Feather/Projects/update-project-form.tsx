@@ -20,6 +20,7 @@ import { useUser } from "@/context/UserContext"
 import { createProject, updateProject } from "@/services/Projects"
 import { toast } from "sonner"
 
+// ✅ Step 1: Add liveLink to schema
 const formSchema = z.object({
     name: z.string().min(2, {
         message: "Project name must be at least 2 characters.",
@@ -34,6 +35,7 @@ const formSchema = z.object({
         required_error: "Start date is required.",
     }),
     endDate: z.date().optional(),
+    liveLink: z.string().url("Please enter a valid URL").optional(),
 })
 
 export function UpdateProjectForm({ project }: any) {
@@ -49,9 +51,9 @@ export function UpdateProjectForm({ project }: any) {
             status: project.status,
             startDate: new Date(project.startDate),
             endDate: project.endDate ? new Date(project.endDate) : undefined,
+            liveLink: project.liveLink || "",
         },
     })
-
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         setIsSubmitting(true)
@@ -68,7 +70,7 @@ export function UpdateProjectForm({ project }: any) {
                 toast.success(res?.message)
                 router.push(`/projects`)
             } else {
-                toast.error(res?.message || "Failed to create project")
+                toast.error(res?.message || "Failed to update project")
             }
         } catch (error) {
             toast.error("Something went wrong.")
@@ -94,6 +96,7 @@ export function UpdateProjectForm({ project }: any) {
                             </FormItem>
                         )}
                     />
+
                     <FormField
                         control={form.control}
                         name="status"
@@ -120,6 +123,21 @@ export function UpdateProjectForm({ project }: any) {
                     />
                 </div>
 
+                {/* ✅ Live Link Field */}
+                <FormField
+                    control={form.control}
+                    name="liveLink"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Live Link</FormLabel>
+                            <FormControl>
+                                <Input type="url" placeholder="https://yourproject.com" {...field} />
+                            </FormControl>
+                            <FormDescription>Optional. Provide a link to the live project.</FormDescription>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
 
                 <FormField
                     control={form.control}
@@ -132,7 +150,7 @@ export function UpdateProjectForm({ project }: any) {
                                     key={field.value}
                                     value={field.value}
                                     onChange={field.onChange}
-                                    placeholder="Enter block description"
+                                    placeholder="Enter project description"
                                 />
                             </FormControl>
                             <FormDescription>
@@ -155,10 +173,7 @@ export function UpdateProjectForm({ project }: any) {
                                         <FormControl>
                                             <Button
                                                 variant={"outline"}
-                                                className={cn(
-                                                    "w-full pl-3 text-left font-normal",
-                                                    !field.value && "text-muted-foreground"
-                                                )}
+                                                className={cn("w-full pl-3 text-left font-normal", !field.value && "text-muted-foreground")}
                                             >
                                                 {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
                                                 <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
@@ -184,10 +199,7 @@ export function UpdateProjectForm({ project }: any) {
                                         <FormControl>
                                             <Button
                                                 variant={"outline"}
-                                                className={cn(
-                                                    "w-full pl-3 text-left font-normal",
-                                                    !field.value && "text-muted-foreground"
-                                                )}
+                                                className={cn("w-full pl-3 text-left font-normal", !field.value && "text-muted-foreground")}
                                             >
                                                 {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
                                                 <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
@@ -210,7 +222,7 @@ export function UpdateProjectForm({ project }: any) {
                         Cancel
                     </Button>
                     <Button type="submit" disabled={isSubmitting}>
-                        {isSubmitting ? "updating..." : "Update Project"}
+                        {isSubmitting ? "Updating..." : "Update Project"}
                     </Button>
                 </div>
             </form>
