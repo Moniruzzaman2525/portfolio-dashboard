@@ -16,6 +16,8 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 import { RichTextEditor } from "@/components/ui/Shared/rich-text-editor"
+import { useUser } from "@/context/UserContext"
+import { createProject } from "@/services/Projects"
 
 const formSchema = z.object({
     name: z.string().min(2, {
@@ -31,13 +33,11 @@ const formSchema = z.object({
         required_error: "Start date is required.",
     }),
     endDate: z.date().optional(),
-    owner: z.string().min(2, {
-        message: "Owner name must be at least 2 characters.",
-    }),
 })
 
 export function ProjectForm() {
     const router = useRouter()
+    const { user } = useUser();
     const [isSubmitting, setIsSubmitting] = useState(false)
 
     const form = useForm<z.infer<typeof formSchema>>({
@@ -46,22 +46,25 @@ export function ProjectForm() {
             name: "",
             description: "",
             status: "",
-            owner: "",
         },
     })
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
-        setIsSubmitting(true)
+    const onSubmit = async (values: z.infer<typeof formSchema>) => {
+        const formattedData = {
+            ...values,
+            startDate: format(values.startDate, "yyyy-MM-dd"),
+            endDate: values.endDate ? format(values.endDate, "yyyy-MM-dd") : null,
+            owner: user?.userId
+        }
 
-        // In a real app, you would submit to your API here
-        console.log(values)
-
-        // Simulate API call
-        setTimeout(() => {
-            setIsSubmitting(false)
-            router.push("/")
-        }, 1000)
+        const res = await createProject(formattedData)
+        console.log(res)
+        if (res.success) {
+            router.push(`/projects`)
+        }
     }
+
+
 
     return (
         <Form {...form}>
@@ -179,25 +182,11 @@ export function ProjectForm() {
                     />
                 </div>
 
-                <FormField
-                    control={form.control}
-                    name="owner"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Project Owner</FormLabel>
-                            <FormControl>
-                                <Input placeholder="Enter project owner" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-
                 <div className="flex justify-end gap-2">
                     <Button variant="outline" type="button" onClick={() => router.push("/")}>
                         Cancel
                     </Button>
-                    <Button type="submit" disabled={isSubmitting}>
+                    <Button type="submit">
                         {isSubmitting ? "Creating..." : "Create Project"}
                     </Button>
                 </div>
