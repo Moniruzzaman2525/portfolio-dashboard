@@ -19,6 +19,7 @@ import { RichTextEditor } from "@/components/ui/Shared/rich-text-editor"
 import { useUser } from "@/context/UserContext"
 import { createProject } from "@/services/Projects"
 import { toast } from "sonner"
+import { handleImageUpload } from "@/lib/handleImageUpload"
 
 const formSchema = z.object({
     name: z.string().min(2, {
@@ -59,26 +60,14 @@ export function ProjectForm() {
 
         let imageUrl = null
 
-        if (values.image && values.image.length > 0) {
-            const file = values.image[0]
 
-            // Example image upload to Cloudinary or your backend
-            const formData = new FormData()
-            formData.append("file", file)
-            formData.append("upload_preset", "your_preset") // Replace with your actual preset
-
-            try {
-                const res = await fetch("https://api.cloudinary.com/v1_1/your_cloud_name/image/upload", {
-                    method: "POST",
-                    body: formData,
-                })
-
-                const data = await res.json()
-                imageUrl = data.secure_url
-            } catch (error) {
-                toast.error("Image upload failed.")
-                setIsSubmitting(false)
-                return
+        if (values.image) {
+            const uploadedUrl = await handleImageUpload(values.image);
+            if (uploadedUrl) {
+                imageUrl = uploadedUrl;
+            } else {
+                alert("Image upload failed");
+                return;
             }
         }
 
@@ -177,12 +166,13 @@ export function ProjectForm() {
                     )}
                 />
 
+
                 <FormField
                     control={form.control}
                     name="image"
-                    render={({ field: { onChange, ...fieldProps } }) => (
+                    render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Upload Project Image</FormLabel>
+                            <FormLabel>Upload Image</FormLabel>
                             <FormControl>
                                 <Input
                                     type="file"
@@ -190,20 +180,21 @@ export function ProjectForm() {
                                     onChange={(e) => {
                                         const file = e.target.files?.[0]
                                         if (file) {
-                                            onChange(e.target.files)
+                                            field.onChange(file)
                                             const reader = new FileReader()
-                                            reader.onloadend = () => setImagePreview(reader.result as string)
+                                            reader.onloadend = () => {
+                                                setImagePreview(reader.result as string)
+                                            }
                                             reader.readAsDataURL(file)
                                         }
                                     }}
-                                    {...fieldProps}
                                 />
                             </FormControl>
                             {imagePreview && (
                                 <img
                                     src={imagePreview}
                                     alt="Preview"
-                                    className="mt-2 h-32 w-32 rounded-md object-cover border"
+                                    className="mt-2 h-32 rounded-md border object-cover"
                                 />
                             )}
                             <FormMessage />

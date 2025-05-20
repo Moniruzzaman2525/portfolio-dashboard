@@ -9,6 +9,7 @@ export const metadata: Metadata = {
 
 export default async function ExperiencePage() {
     const experience = await getExperience()
+
     return (
         <div className="flex flex-col gap-4 p-4 md:p-8">
             <div>

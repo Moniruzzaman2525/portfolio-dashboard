@@ -11,7 +11,6 @@ export default async function ProjectsPage() {
 
     const projects = await getProjects()
 
-
     return (
         <div className="flex flex-col gap-4 p-4 md:p-8">
             <div>

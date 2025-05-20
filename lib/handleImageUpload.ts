@@ -1,7 +1,7 @@
 export const handleImageUpload = async (file: File): Promise<string | null> => {
     try {
         const formData = new FormData();
-        const url = `https://api.imgbb.com/1/upload?key=125913941a6683504c02b588ca87138f`;
+        const url = `https://api.imgbb.com/1/upload?key=5eece81bae3064a984a2456e43f75675`;
         formData.append("image", file);
 
         // console.log(uploadURL);
