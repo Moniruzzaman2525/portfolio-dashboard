@@ -5,6 +5,7 @@ import { ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { BlockForm } from "@/components/Feather/Blocks/block-form"
+import { ExperienceForm } from "@/components/Feather/Experience/ExperienceForm"
 
 
 export const metadata: Metadata = {
@@ -30,7 +31,7 @@ export default function CreateBlockPage() {
                     <CardDescription>Fill in the details below to create a new block.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <BlockForm />
+                    <ExperienceForm />
                 </CardContent>
             </Card>
         </div>

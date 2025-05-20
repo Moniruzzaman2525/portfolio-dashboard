@@ -25,6 +25,7 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog"
 import { toast } from "sonner"
+import { deleteExperience } from "@/services/Experience"
 
 export function ExperienceTable({ experiences }: { experiences: any[] }) {
 
@@ -68,10 +69,10 @@ export function ExperienceTable({ experiences }: { experiences: any[] }) {
     }
 
     const handleDeleteConfirm = async () => {
-        // const res = await deleteExperience(experienceToDelete)
-        // if (res.success) {
-        //     toast.success(res?.message)
-        // }
+        const res = await deleteExperience(experienceToDelete)
+        if (res.success) {
+            toast.success(res?.message)
+        }
         setDeleteDialogOpen(false)
         setExperienceToDelete(null)
     }
