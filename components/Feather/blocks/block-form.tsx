@@ -33,13 +33,7 @@ const formSchema = z.object({
     image: z.any()
 })
 
-const projects = [
-    { id: "1", name: "E-commerce Platform" },
-    { id: "2", name: "CRM System" },
-    { id: "3", name: "Mobile App" },
-    { id: "4", name: "Marketing Website" },
-    { id: "5", name: "Internal Dashboard" },
-]
+
 
 export function BlockForm() {
     const router = useRouter()
@@ -52,7 +46,6 @@ export function BlockForm() {
             name: "",
             description: "",
             type: "",
-            project: "",
             code: "",
         },
     })
@@ -71,7 +64,7 @@ export function BlockForm() {
             ...values,
             image: imageUrl,
         };
-        const res = await createBlock(values)
+        const res = await createBlock(payload)
 
         if (res.success) {
             toast.success(res?.message);
@@ -88,9 +81,9 @@ export function BlockForm() {
                         name="name"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Block Name</FormLabel>
+                                <FormLabel>Block Title</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="Enter block name" {...field} />
+                                    <Input placeholder="Enter block Title" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -141,31 +134,6 @@ export function BlockForm() {
 
                 <FormField
                     control={form.control}
-                    name="project"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Associated Project</FormLabel>
-                            <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                <FormControl>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Select project" />
-                                    </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                    {projects.map((project) => (
-                                        <SelectItem key={project.id} value={project.id}>
-                                            {project.name}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-
-                <FormField
-                    control={form.control}
                     name="code"
                     render={({ field }) => (
                         <FormItem>
@@ -182,6 +150,8 @@ export function BlockForm() {
                         </FormItem>
                     )}
                 />
+
+                
                 <FormField
                     control={form.control}
                     name="image"

@@ -121,12 +121,12 @@ export function BlocksTable({ blocks }: { blocks: any[] }) {
                                         <ArrowUpDown className="ml-2 h-4 w-4" />
                                     </Button>
                                 </TableHead>
-                                <TableHead className="hidden md:table-cell">
+                                {/* <TableHead className="hidden md:table-cell">
                                     <Button variant="ghost" className="p-0 hover:bg-transparent" onClick={() => handleSort("project")}>
                                         <span>Project</span>
                                         <ArrowUpDown className="ml-2 h-4 w-4" />
                                     </Button>
-                                </TableHead>
+                                </TableHead> */}
                                 <TableHead className="hidden md:table-cell">
                                     <Button variant="ghost" className="p-0 hover:bg-transparent" onClick={() => handleSort("createdAt")}>
                                         <span>Created</span>
@@ -156,7 +156,7 @@ export function BlocksTable({ blocks }: { blocks: any[] }) {
                                         <TableCell>
                                             <Badge variant={block.type === "UI Component" ? "outline" : "secondary"}>{block.type}</Badge>
                                         </TableCell>
-                                        <TableCell className="hidden md:table-cell">{block.project}</TableCell>
+                                        {/* <TableCell className="hidden md:table-cell">{block.project}</TableCell> */}
                                         <TableCell className="hidden md:table-cell">{block.createdAt}</TableCell>
                                         <TableCell className="hidden lg:table-cell">{block.updatedAt}</TableCell>
                                         <TableCell className="text-right">

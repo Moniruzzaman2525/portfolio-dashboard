@@ -45,15 +45,6 @@ const formSchema = z.object({
     code: z.string().optional(),
 })
 
-// Sample project list
-const projects = [
-    { id: "1", name: "E-commerce Platform" },
-    { id: "2", name: "CRM System" },
-    { id: "3", name: "Mobile App" },
-    { id: "4", name: "Marketing Website" },
-    { id: "5", name: "Internal Dashboard" },
-]
-
 // Block type labels
 const blockTypes: { [key: string]: string } = {
     "ui-component": "UI Component",
@@ -66,15 +57,13 @@ const blockTypes: { [key: string]: string } = {
 export function UpdateBlockForm({ block }: any) {
     const router = useRouter()
     const [isSubmitting, setIsSubmitting] = useState(false)
-    const projectId =
-        projects.find((p) => p.id === block.project || p.name === block.project)?.id || ""
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             name: block.name,
             description: block.description,
             type: block.type,
-            project: projectId,
             code: block.code,
         },
     })
@@ -83,7 +72,7 @@ export function UpdateBlockForm({ block }: any) {
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         setIsSubmitting(true)
 
-        
+
 
         const res = await updateBlock(block._id, values)
 
@@ -166,32 +155,7 @@ export function UpdateBlockForm({ block }: any) {
                     )}
                 />
 
-                <FormField
-                    control={form.control}
-                    name="project"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Associated Project</FormLabel>
-                            <Select onValueChange={field.onChange} value={field.value}>
-                                <FormControl>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Select project">
-                                            {projects.find((p) => p.id === field.value)?.name || ""}
-                                        </SelectValue>
-                                    </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                    {projects.map((project) => (
-                                        <SelectItem key={project.id} value={project.id}>
-                                            {project.name}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
+
 
                 <FormField
                     control={form.control}
