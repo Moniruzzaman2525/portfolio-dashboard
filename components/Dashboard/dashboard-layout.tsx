@@ -4,7 +4,7 @@ import type React from "react"
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Blocks, FolderKanban, Home, LayoutDashboard, LogOut, Menu, Settings, User } from "lucide-react"
+import { Blocks, FolderKanban, Home, LayoutDashboard, LogOut, Menu, Settings, SkullIcon, User } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
@@ -34,7 +34,12 @@ const navigationItems = [
     title: "Blocks",
     href: "/blocks",
     icon: Blocks,
-  }
+  },
+  {
+    title: "Skills",
+    href: "/skill",
+    icon: SkullIcon,
+  },
 ]
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
