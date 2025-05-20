@@ -5,6 +5,7 @@ import type React from "react"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Eye, EyeOff } from "lucide-react"
+import { registerUser } from "@/services/AuthService"
 
 export function SignupForm() {
     const router = useRouter()
@@ -26,21 +27,18 @@ export function SignupForm() {
             setError("Passwords do not match")
             return
         }
-
-        if (password.length < 8) {
-            setError("Password must be at least 8 characters")
-            return
-        }
-
         setIsLoading(true)
 
         try {
-            // Here you would typically call your registration API
-            // For demo purposes, we'll just simulate a signup
-            await new Promise((resolve) => setTimeout(resolve, 1000))
+            const data = {
+                name,
+                email,
+                password,
+            }
 
-            // Redirect to login page on success
-            router.push("/login")
+            const res = await registerUser(data)
+            console.log(res)
+
         } catch (err) {
             setError("An error occurred. Please try again.")
         } finally {

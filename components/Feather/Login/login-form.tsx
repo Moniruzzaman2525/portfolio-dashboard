@@ -20,16 +20,8 @@ export function LoginForm() {
         setIsLoading(true)
 
         try {
-            // Here you would typically call your authentication API
-            // For demo purposes, we'll just simulate a login
-            await new Promise((resolve) => setTimeout(resolve, 1000))
-
-            // Simple validation for demo
-            if (email === "user@example.com" && password === "password") {
-                router.push("/dashboard") // Redirect to dashboard on success
-            } else {
-                setError("Invalid email or password")
-            }
+            console.log(email)
+            console.log(password)
         } catch (err) {
             setError("An error occurred. Please try again.")
         } finally {

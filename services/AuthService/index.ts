@@ -1,6 +1,7 @@
 "use server";
 import { cookies } from "next/headers";
 import { jwtDecode } from "jwt-decode";
+import { FieldValues } from "react-hook-form";
 export const getCurrentUser = async () => {
     const accessToken = (await cookies()).get("accessToken")?.value;
     let decodedData = null;
@@ -10,5 +11,22 @@ export const getCurrentUser = async () => {
         return decodedData;
     } else {
         return null;
+    }
+};
+
+
+export const registerUser = async (userData: FieldValues) => {
+    try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/auth/register`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(userData),
+        });
+        const result = await res.json();
+        return result;
+    } catch (error: any) {
+        return Error(error);
     }
 };
