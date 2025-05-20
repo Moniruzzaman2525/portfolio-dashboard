@@ -25,6 +25,8 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog"
 import { Badge } from "@/components/ui/badge"
+import { deleteBlocks } from "@/services/Blocks"
+import { toast } from "sonner"
 
 
 
@@ -70,9 +72,11 @@ export function BlocksTable({ blocks }: { blocks: any[] }) {
         setDeleteDialogOpen(true)
     }
 
-    const handleDeleteConfirm = () => {
-        // In a real app, you would delete the block here
-        console.log(`Deleting block ${blockToDelete}`)
+    const handleDeleteConfirm = async () => {
+        const res = await deleteBlocks(blockToDelete)
+        if (res.success) {
+            toast.success(res?.message);
+        }
         setDeleteDialogOpen(false)
         setBlockToDelete(null)
     }

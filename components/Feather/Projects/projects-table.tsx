@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/dialog"
 import { Badge } from "@/components/ui/badge"
 import { deleteProjects } from "@/services/Projects"
+import { toast } from "sonner"
 
 export function ProjectsTable({ projects }: { projects: any[] }) {
     const [searchTerm, setSearchTerm] = useState("")
@@ -70,10 +71,10 @@ export function ProjectsTable({ projects }: { projects: any[] }) {
     }
 
     const handleDeleteConfirm = async () => {
-        // In a real app, you would delete the project here
-        console.log(`Deleting project ${projectToDelete}`)
         const res = await deleteProjects(projectToDelete)
-        console.log(res)
+        if (res.success) {
+            toast.success(res?.message);
+        }
         setDeleteDialogOpen(false)
         setProjectToDelete(null)
     }
