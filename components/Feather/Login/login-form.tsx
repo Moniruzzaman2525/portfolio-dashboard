@@ -1,14 +1,17 @@
 "use client"
 
 import type React from "react"
-
+import { toast } from 'sonner';
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Eye, EyeOff } from "lucide-react"
+import { useUser } from "@/context/UserContext"
+import { loginUser } from "@/services/AuthService"
 
 export function LoginForm() {
+    const { setIsLoading } = useUser();
     const router = useRouter()
-    const [isLoading, setIsLoading] = useState(false)
+    const [isLoadingButton, setIsLoadingButton] = useState(false)
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [showPassword, setShowPassword] = useState(false)
@@ -17,15 +20,27 @@ export function LoginForm() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         setError("")
-        setIsLoading(true)
+        setIsLoadingButton(true)
 
         try {
-            console.log(email)
-            console.log(password)
+            const data = {
+                name,
+                email,
+                password,
+            }
+            const res = await loginUser(data);
+            if (res.success) {
+                setIsLoading(true);
+                toast.success(res?.message);
+                router.push('/')
+
+            } else {
+                toast.error(res?.message || 'Login failed. Please try again.');
+            }
         } catch (err) {
             setError("An error occurred. Please try again.")
         } finally {
-            setIsLoading(false)
+            setIsLoadingButton(false)
         }
     }
 
@@ -84,9 +99,9 @@ export function LoginForm() {
             <button
                 type="submit"
                 className="inline-flex h-10 w-full items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
-                disabled={isLoading}
+                disabled={isLoadingButton}
             >
-                {isLoading ? "Signing in..." : "Sign in"}
+                {isLoadingButton ? "Signing in..." : "Sign in"}
             </button>
         </form>
     )
