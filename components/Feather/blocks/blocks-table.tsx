@@ -165,12 +165,12 @@ export function BlocksTable({ blocks }: { blocks: any[] }) {
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent align="end">
                                                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                                    <DropdownMenuItem asChild>
+                                                    {/* <DropdownMenuItem asChild>
                                                         <Link href={`/blocks/${block._id}`}>
                                                             <Eye className="mr-2 h-4 w-4" />
                                                             View
                                                         </Link>
-                                                    </DropdownMenuItem>
+                                                    </DropdownMenuItem> */}
                                                     <DropdownMenuItem asChild>
                                                         <Link href={`/blocks/${block._id}/edit`}>
                                                             <Edit className="mr-2 h-4 w-4" />

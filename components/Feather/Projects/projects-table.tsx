@@ -25,6 +25,7 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog"
 import { Badge } from "@/components/ui/badge"
+import { deleteProjects } from "@/services/Projects"
 
 export function ProjectsTable({ projects }: { projects: any[] }) {
     const [searchTerm, setSearchTerm] = useState("")
@@ -68,9 +69,11 @@ export function ProjectsTable({ projects }: { projects: any[] }) {
         setDeleteDialogOpen(true)
     }
 
-    const handleDeleteConfirm = () => {
+    const handleDeleteConfirm = async () => {
         // In a real app, you would delete the project here
         console.log(`Deleting project ${projectToDelete}`)
+        const res = await deleteProjects(projectToDelete)
+        console.log(res)
         setDeleteDialogOpen(false)
         setProjectToDelete(null)
     }
@@ -176,12 +179,12 @@ export function ProjectsTable({ projects }: { projects: any[] }) {
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent align="end">
                                                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                                    <DropdownMenuItem asChild>
+                                                    {/* <DropdownMenuItem asChild>
                                                         <Link href={`/projects/${project._id}`}>
                                                             <Eye className="mr-2 h-4 w-4" />
                                                             View
                                                         </Link>
-                                                    </DropdownMenuItem>
+                                                    </DropdownMenuItem> */}
                                                     <DropdownMenuItem asChild>
                                                         <Link href={`/projects/${project._id}/edit`}>
                                                             <Edit className="mr-2 h-4 w-4" />

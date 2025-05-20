@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 
 export const getProjects = async () => {
@@ -9,8 +10,12 @@ export const getProjects = async () => {
             headers: {
                 "Content-Type": "application/json",
             },
+            next: {
+                tags: ["projects"],
+            },
         });
         const result = await res.json();
+
         return result;
     } catch (error: any) {
         return Error(error);
@@ -29,6 +34,7 @@ export const createProject = async (data: any) => {
             body: JSON.stringify(data),
         });
         const result = await res.json();
+        revalidateTag("projects")
         return result;
     } catch (error: any) {
         return Error(error);
@@ -36,3 +42,19 @@ export const createProject = async (data: any) => {
 }
 
 
+export const deleteProjects = async (id: any) => {
+    try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/projects/${id}`, {
+            method: "DELETE",
+            headers: {
+                Authorization: `Bearer ${(await cookies()).get("accessToken")!.value}`,
+                "Content-Type": "application/json",
+            },
+        });
+        const result = await res.json();
+        revalidateTag("projects")
+        return result;
+    } catch (error: any) {
+        return Error(error);
+    }
+}
