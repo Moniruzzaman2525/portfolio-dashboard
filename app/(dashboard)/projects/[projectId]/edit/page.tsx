@@ -9,9 +9,10 @@ import React from 'react';
 
 const UpdateProject = async ({ params }: { params: { projectId: string } }) => {
 
-    const projectId = await params.projectId
+    const projectId = await params
+    const id = projectId?.projectId
 
-    const project = await getSingleProject(projectId)
+    const project = await getSingleProject(id)
 
     return (
         <div className="flex flex-col gap-4 p-4 md:p-8">

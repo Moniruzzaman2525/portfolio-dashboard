@@ -62,7 +62,7 @@ export const deleteBlocks = async (id: any) => {
 export const updateBlock = async (id: any, data: any) => {
     try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/blocks/${id}`, {
-            method: "PUT",
+            method: "PATCH",
             headers: {
                 Authorization: `Bearer ${(await cookies()).get("accessToken")!.value}`,
                 "Content-Type": "application/json",

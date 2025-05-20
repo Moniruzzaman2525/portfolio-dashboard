@@ -8,8 +8,9 @@ import Link from 'next/link';
 import React from 'react';
 const BlocksId = async ({ params }: { params: { blockId: string } }) => {
 
-    const blockId = await params.blockId
-    const block = await getSingleBlock(blockId)
+    const blockId = await params
+    const id = blockId?.blockId
+    const block = await getSingleBlock(id)
 
     return (
         <div className="flex flex-col gap-4 p-4 md:p-8">

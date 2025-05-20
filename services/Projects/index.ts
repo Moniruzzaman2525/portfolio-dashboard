@@ -52,6 +52,7 @@ export const updateProject = async (id: any, data: any) => {
             body: JSON.stringify(data),
         });
         const result = await res.json();
+        console.log(result)
         revalidateTag("projects")
         return result;
     } catch (error: any) {

@@ -26,7 +26,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 import { RichTextEditor } from "@/components/Dashboard/rich-text-editor"
-import { createBlock } from "@/services/Blocks"
+import { createBlock, updateBlock } from "@/services/Blocks"
 import { toast } from "sonner"
 
 const formSchema = z.object({
@@ -83,7 +83,9 @@ export function UpdateBlockForm({ block }: any) {
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         setIsSubmitting(true)
 
-        const res = await createBlock(values)
+        
+
+        const res = await updateBlock(block._id, values)
 
         if (res.success) {
             toast.success(res.message || "Block created successfully!")
