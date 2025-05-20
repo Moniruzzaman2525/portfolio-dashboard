@@ -162,7 +162,7 @@ export function UpdateBlockForm({ block }: any) {
                             <FormLabel>Description</FormLabel>
                             <FormControl>
                                 <RichTextEditor
-                                    key={field.value} // Important for re-rendering on edit
+                                    key={field.value} 
                                     value={field.value}
                                     onChange={field.onChange}
                                     placeholder="Enter block description"

@@ -9,9 +9,7 @@ import React from 'react';
 const BlocksId = async ({ params }: { params: { blockId: string } }) => {
 
     const blockId = await params.blockId
-    console.log(blockId)
     const block = await getSingleBlock(blockId)
-    console.log(block.data)
 
     return (
         <div className="flex flex-col gap-4 p-4 md:p-8">
