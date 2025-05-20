@@ -1,13 +1,15 @@
 "use client"
 
 import type React from "react"
-
+import { toast } from 'sonner';
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Eye, EyeOff } from "lucide-react"
 import { registerUser } from "@/services/AuthService"
-
-export function SignupForm() {
+interface LoginFormProps {
+    query: { [key: string]: string | string[] | undefined };
+}
+export function SignupForm({ query }: LoginFormProps) {
     const router = useRouter()
     const [isLoading, setIsLoading] = useState(false)
     const [name, setName] = useState("")
@@ -17,6 +19,7 @@ export function SignupForm() {
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
     const [error, setError] = useState("")
+    const redirect = Array.isArray(query?.redirectPath) ? query?.redirectPath[0] : query?.redirectPath;
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -37,7 +40,18 @@ export function SignupForm() {
             }
 
             const res = await registerUser(data)
-            console.log(res)
+            if (res.success) {
+                setIsLoading(true);
+                toast.success(res?.message);
+                router.push('/')
+                if (redirect) {
+                    router.push(redirect);
+                } else {
+                    router.push('/');
+                }
+            } else {
+                toast.error(res?.message || 'Login failed. Please try again.');
+            }
 
         } catch (err) {
             setError("An error occurred. Please try again.")
