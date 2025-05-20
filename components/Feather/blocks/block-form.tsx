@@ -14,6 +14,7 @@ import * as z from "zod"
 import { RichTextEditor } from "@/components/Dashboard/rich-text-editor"
 import { createBlock } from "@/services/Blocks"
 import { toast } from "sonner"
+import { handleImageUpload } from "@/lib/handleImageUpload"
 
 const formSchema = z.object({
     name: z.string().min(2, {
@@ -29,9 +30,9 @@ const formSchema = z.object({
         required_error: "Please select a project.",
     }),
     code: z.string().optional(),
+    image: z.any()
 })
 
-// Sample data - would come from your API in a real app
 const projects = [
     { id: "1", name: "E-commerce Platform" },
     { id: "2", name: "CRM System" },
@@ -43,6 +44,7 @@ const projects = [
 export function BlockForm() {
     const router = useRouter()
     const [isSubmitting, setIsSubmitting] = useState(false)
+    const [imagePreview, setImagePreview] = useState<string | null>(null)
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -55,9 +57,22 @@ export function BlockForm() {
         },
     })
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
-
+        let imageUrl = "";
+        if (values.image) {
+            const uploadedUrl = await handleImageUpload(values.image);
+            if (uploadedUrl) {
+                imageUrl = uploadedUrl;
+            } else {
+                alert("Image upload failed");
+                return;
+            }
+        }
+        const payload = {
+            ...values,
+            image: imageUrl,
+        };
         const res = await createBlock(values)
-        console.log(res)
+
         if (res.success) {
             toast.success(res?.message);
             setIsSubmitting(false)
@@ -163,6 +178,43 @@ export function BlockForm() {
                                 />
                             </FormControl>
                             <FormDescription>Add any code snippets or implementation details for this block.</FormDescription>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name="image"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Upload Image</FormLabel>
+                            <FormControl>
+                                <Input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(e) => {
+                                        const file = e.target.files?.[0]
+                                        if (file) {
+                                            field.onChange(file)
+                                            const reader = new FileReader()
+                                            reader.onloadend = () => {
+                                                setImagePreview(reader.result as string)
+                                            }
+                                            reader.readAsDataURL(file)
+                                        }
+                                    }}
+                                />
+                            </FormControl>
+                            {imagePreview && (
+                                <img
+                                    src={imagePreview}
+                                    alt="Preview"
+                                    className="mt-2 h-32 rounded-md border object-cover"
+                                />
+                            )}
+                            <FormDescription>
+                                Upload a visual reference for this block, like a screenshot.
+                            </FormDescription>
                             <FormMessage />
                         </FormItem>
                     )}
