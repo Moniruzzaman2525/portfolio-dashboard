@@ -58,7 +58,6 @@ export function ProjectForm() {
         }
 
         const res = await createProject(formattedData)
-        console.log(res)
         if (res.success) {
             router.push(`/projects`)
         }

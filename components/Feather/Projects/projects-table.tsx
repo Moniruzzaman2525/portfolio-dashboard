@@ -26,50 +26,9 @@ import {
 } from "@/components/ui/dialog"
 import { Badge } from "@/components/ui/badge"
 
-const projects = [
-    {
-        id: "1",
-        name: "E-commerce Platform",
-        status: "Active",
-        createdAt: "2023-04-12",
-        updatedAt: "2023-05-15",
-        owner: "John Doe",
-    },
-    {
-        id: "2",
-        name: "CRM System",
-        status: "In Progress",
-        createdAt: "2023-06-22",
-        updatedAt: "2023-07-05",
-        owner: "Jane Smith",
-    },
-    {
-        id: "3",
-        name: "Mobile App",
-        status: "Completed",
-        createdAt: "2023-02-10",
-        updatedAt: "2023-03-28",
-        owner: "Alex Johnson",
-    },
-    {
-        id: "4",
-        name: "Marketing Website",
-        status: "Active",
-        createdAt: "2023-08-05",
-        updatedAt: "2023-08-15",
-        owner: "Sarah Williams",
-    },
-    {
-        id: "5",
-        name: "Internal Dashboard",
-        status: "Planning",
-        createdAt: "2023-09-01",
-        updatedAt: "2023-09-01",
-        owner: "Michael Brown",
-    },
-]
 
-export function ProjectsTable() {
+
+export function ProjectsTable({ projects }: { projects: any[] }) {
     const [searchTerm, setSearchTerm] = useState("")
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
     const [projectToDelete, setProjectToDelete] = useState<string | null>(null)
@@ -188,7 +147,7 @@ export function ProjectsTable() {
                                 </TableRow>
                             ) : (
                                 sortedProjects.map((project) => (
-                                    <TableRow key={project.id}>
+                                    <TableRow key={project._id}>
                                         <TableCell className="font-medium">{project.name}</TableCell>
                                         <TableCell>
                                             <Badge
@@ -220,13 +179,13 @@ export function ProjectsTable() {
                                                 <DropdownMenuContent align="end">
                                                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
                                                     <DropdownMenuItem asChild>
-                                                        <Link href={`/projects/${project.id}`}>
+                                                        <Link href={`/projects/${project._id}`}>
                                                             <Eye className="mr-2 h-4 w-4" />
                                                             View
                                                         </Link>
                                                     </DropdownMenuItem>
                                                     <DropdownMenuItem asChild>
-                                                        <Link href={`/projects/${project.id}/edit`}>
+                                                        <Link href={`/projects/${project._id}/edit`}>
                                                             <Edit className="mr-2 h-4 w-4" />
                                                             Edit
                                                         </Link>
@@ -234,7 +193,7 @@ export function ProjectsTable() {
                                                     <DropdownMenuSeparator />
                                                     <DropdownMenuItem
                                                         className="text-destructive focus:text-destructive"
-                                                        onClick={() => handleDeleteClick(project.id)}
+                                                        onClick={() => handleDeleteClick(project._id)}
                                                     >
                                                         <Trash2 className="mr-2 h-4 w-4" />
                                                         Delete
