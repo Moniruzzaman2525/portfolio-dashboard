@@ -1,27 +1,45 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
-import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form"
+import {
+    Form,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormControl,
+    FormMessage,
+} from "@/components/ui/form"
 import { toast } from "sonner"
-import { createSkills } from "@/services/Skills"
 import { handleImageUpload } from "@/lib/handleImageUpload"
+import { updateSkills } from "@/services/Skills"
 
 const formSchema = z.object({
     name: z.string().min(2, {
         message: "Skill name must be at least 2 characters.",
     }),
     image: z
-        .instanceof(File, { message: "Image is required." })
-        .refine((file) => file.size > 0, { message: "Image is required." }),
+        .union([z.instanceof(File), z.string()])
+        .refine((val) => {
+            if (typeof val === "string") return true // existing image URL
+            return val instanceof File && val.size > 0 // new file
+        }, {
+            message: "Image is required.",
+        }),
 })
 
-export function AddSkillForm() {
+type SkillType = {
+    id: string
+    name: string
+    image: string
+}
+
+export function UpdateSkillForm({ skill }: { skill: SkillType }) {
     const router = useRouter()
     const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -29,35 +47,45 @@ export function AddSkillForm() {
         resolver: zodResolver(formSchema),
         defaultValues: {
             name: "",
-            image: undefined,
+            image: "",
         },
     })
+
+    useEffect(() => {
+        if (skill) {
+            form.setValue("name", skill.name)
+            form.setValue("image", skill.image)
+        }
+    }, [skill, form])
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         setIsSubmitting(true)
 
-        let imageUrl = "";
-        if (values.image) {
-            const uploadedUrl = await handleImageUpload(values.image);
-            if (uploadedUrl) {
-                imageUrl = uploadedUrl;
-            } else {
-                alert("Image upload failed");
-                return;
-            }
-        }
-        const payload = {
-            ...values,
-            image: imageUrl,
-        };
-        try {
-            const res = await createSkills(payload)
+        let imageUrl = typeof values.image === "string" ? values.image : ""
 
+        // Only upload if a new file is selected
+        if (values.image instanceof File) {
+            const uploadedUrl = await handleImageUpload(values.image)
+            if (!uploadedUrl) {
+                toast.error("Image upload failed.")
+                setIsSubmitting(false)
+                return
+            }
+            imageUrl = uploadedUrl
+        }
+
+        const payload = {
+            name: values.name,
+            image: imageUrl,
+        }
+
+        try {
+            const res = await updateSkills(skill.id, payload)
             if (res.success) {
-                toast.success("Skill added successfully!")
+                toast.success("Skill updated successfully!")
                 router.push("/skill")
             } else {
-                toast.error(res?.message || "Failed to add skill")
+                toast.error(res?.message || "Failed to update skill")
             }
         } catch (error) {
             toast.error("Something went wrong.")
@@ -102,11 +130,11 @@ export function AddSkillForm() {
                 />
 
                 <div className="flex justify-end gap-2">
-                    <Button variant="outline" type="button" onClick={() => router.push("/")}>
+                    <Button variant="outline" type="button" onClick={() => router.push("/skill")}>
                         Cancel
                     </Button>
                     <Button type="submit" disabled={isSubmitting}>
-                        {isSubmitting ? "Adding..." : "Add Skill"}
+                        {isSubmitting ? "Updating..." : "Update Skill"}
                     </Button>
                 </div>
             </form>

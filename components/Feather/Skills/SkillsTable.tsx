@@ -33,6 +33,7 @@ import {
 } from "@/components/ui/dialog"
 // import { deleteSkill } from "@/services/Skills"
 import { toast } from "sonner"
+import { deleteSkills } from "@/services/Skills"
 
 export function SkillsTable({ skills }: { skills: any[] }) {
     const [searchTerm, setSearchTerm] = useState("")
@@ -74,12 +75,12 @@ export function SkillsTable({ skills }: { skills: any[] }) {
     }
 
     const handleDeleteConfirm = async () => {
-        // const res = await deleteSkill(skillToDelete)
-        // if (res.success) {
-        //     toast.success(res.message)
-        // } else {
-        //     toast.error(res.message || "Failed to delete skill.")
-        // }
+        const res = await deleteSkills(skillToDelete)
+        if (res.success) {
+            toast.success(res.message)
+        } else {
+            toast.error(res.message || "Failed to delete skill.")
+        }
         setDeleteDialogOpen(false)
         setSkillToDelete(null)
     }
@@ -154,7 +155,7 @@ export function SkillsTable({ skills }: { skills: any[] }) {
                                                 <DropdownMenuContent align="end">
                                                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
                                                     <DropdownMenuItem asChild>
-                                                        <Link href={`/skills/${skill._id}/edit`}>
+                                                        <Link href={`/skill/${skill._id}/edit`}>
                                                             <Edit className="mr-2 h-4 w-4" />
                                                             Edit
                                                         </Link>
